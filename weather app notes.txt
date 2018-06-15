@@ -1,0 +1,34 @@
+solidify knowledge of react, familiar with redux, and figure out how to make async (AJAX) request with redux.
+
+app - weather forecast browser. at the top, user are able to search for a city by hitting enter. submit a query to third party API for weather data for the next five days. these data gets logged on each row of the app
+
+challenge 1: need to figure out how to make AJAX request with redux. with react, we called the api with on event handler. with redux, we need to centralize all our logic into reducers and actions whereas react is only used to show data.
+
+challenge 2: how to integrate a third party libary that draws the line chart into our application
+
+challenge 3: dealing with redux state where the state changes significantly over time. Searching the same city does not replace or delete previous data, but it gathers data over time.
+
+our app uses bootstrap!!!
+
+controlled view input = form element where the value of the input is set by the state of the component.
+
+passing off event handler has a problem. this in javascript means whenver we hand off a callback funciton of this, this is going to have mystery context
+
+*** if we are passing a callback with reference to 'this', we need to bind the context!!!
+
+middlewares
+middlewares are functions that take an action, and depending on the action type and payload (or more factors) the middleware can choose to let the action pass through, it can stop it, it can console log it, before it reaches any reducers. They act as gate keeper for the reducers.
+
+middleware stops the action in its track until the promises is resolved then it goes do its thing
+
+redux promise allows us to clean up our code and it makes our code looks synchronous when it is really async. dont have to write long code that waits for promises. It automatically unwraps a promise for us.
+
+there is a problem for the sparklines, use v1.7.0 instead of v1.6.0
+
+project review:
+- used a lot of redux using the fetchWeather action creator. we had a const for our action type which is used for our action and reducer (less typos) vs a string
+- middlewares, redux promise. we use it to handle a promise recieved whling using axios. we used axios for our AJAX request. the middleware was really helpful b/c it automatically detected that we provided a payload of a promise. it stopped that action and waited for the promise to resolve. once it is resolved, it took the data that came from the request, stuck it on the payload property, and sent the action to all the reducers in our app. although we made an AJAX request, we didnt really have to think about the ASYNC nature of our code. dont have to worry about promises or callbacks!!!
+- reducers, specifically avoid mutating our state (never do state.weather.push or state.tomorrowsWeather = weather). never modify state directly. instead return a new object that will take the place of our existing state. we take a new array, flattening it out, and creating a new one.
+- the sparklines library, very easy to use. only problem or hard part is figuring out to pump data into the library. we passed in units as an additional property
+- adding google map api is very easy. just add in the container element and the center lon/lat with zoom to make it more interactive
+- abstract googlemap and chart to their own separate component -> good because we can reuse them everywhere else in the app.
